@@ -23,14 +23,29 @@
             -webkit-backdrop-filter: blur(8px);
         }
         .cover-section {
-            /* Set the user-provided image as background */
-            background-image: url('https://lh3.googleusercontent.com/pw/AP1GczOhA7XE6j52PjDORCp4xQiYSFLdOxGgg-T26--rWsfCcHIzdPcC5IlSqlswhwX6TceiqtMjbpPSVdyasZX9odYELFMCBniuueXWH-VXAK7iksoECwU31sAWi-qFuWqZXQ90IDO6cLHvGBLCwjKewOE=w1920-h378-s-no-gm?authuser=0');
-            background-size: cover;
+            /* Set the MOBILE image as default (mobile-first design) */
+            background-image: url('https://lh3.googleusercontent.com/pw/AP1GczNkfNhxA5xttdZ6IjIR1WZPUPRUoSCltiiiCSa3YVp7aiA5irFHaFFSZXSNKrfID_RJ9Cb_FMEaWcersscoLka0i8yHGsCL8JoICR6cf4KRdBfhLkGQ6kxj-KGCvxRx0v9rqSVNb8pOMZd-ROkqLGY=w1906-h953-s-no-gm?authuser=0');
+            
+            /* **FIX: Reverted to 'cover' for mobile for full-screen fill** */
+            background-size: cover; 
+            
             background-position: center;
             background-repeat: no-repeat;
+            /* Removed black background as cover will fill the space */
+            background-color: transparent; 
             width: 100%;
             height: 40vh; /* Responsive height (40% of viewport height) */
             position: relative;
+        }
+        /* Override with DESKTOP image for medium and larger screens (md: 768px and up) */
+        @media (min-width: 768px) {
+            .cover-section {
+                background-image: url('https://lh3.googleusercontent.com/pw/AP1GczOhA7XE6j52PjDORCp4xQiYSFLdOxGgg-T26--rWsfCcHIzdPcC5IlSqlswhwX6TceiqtMjbpPSVdyasZX9odYELFMCBniuueXWH-VXAK7iksoECwU31sAWi-qFuWqZXQ90IDO6cLHvGBLCwjKewOE=w1920-h378-s-no-gm?authuser=0');
+                /* Explicitly set back to 'cover' for desktop as requested */
+                background-size: cover; 
+                /* Remove black background on desktop */
+                background-color: transparent; 
+            }
         }
         .cover-section::before {
             content: '';
@@ -211,4 +226,155 @@
                         <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                     </button>
                     <button id="nextBtn" class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:bg-gray-100 transition" aria-label="Next Reel">
-                        <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="
+                        <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                    
+                </div>
+            </section>
+
+            <!-- 3. BOOK TICKET Call-to-Action (CTA) Button -->
+            <section class="text-center py-16">
+                <h2 class="text-4xl font-extrabold text-gray-800 mb-6">Ready to Join the Celebration?</h2>
+                <button id="ctaTicketButton" 
+                    class="ticket-button-cta text-white font-bold text-xl px-12 py-4 rounded-full shadow-2xl uppercase tracking-wider"
+                    onclick="handleTicketClick()">
+                    BOOK TICKET NOW
+                </button>
+                <p class="text-sm text-gray-500 mt-4">Limited Seats Available. Secure your spot today!</p>
+            </section>
+
+            <!-- Placeholder anchors for navigation links (as content sections were removed) -->
+            <div id="about-placeholder"></div>
+            <div id="contact-placeholder"></div>
+            <div id="address-placeholder"></div>
+
+        </main>
+    </div>
+
+    <script>
+        // --- Configuration & Initialization ---
+        // Updated: Using the external link provided by the user for the Ticket page
+        const TICKET_LINK = "https://jagoronculturalsio.github.io/ticket/"; 
+        const reels = document.querySelectorAll('.reel-video');
+        const reelCarousel = document.getElementById('reelCarousel');
+        const reelSection = document.getElementById('reels-section');
+        const mainVideoFrame = document.getElementById('mainVideoFrame');
+        const mainVideoContainer = document.getElementById('main-video-section');
+        const mainHeader = document.getElementById('main-header');
+
+        let currentReelIndex = 0;
+        let isReelSectionVisible = false;
+
+        // --- Firebase/Auth Setup (Mandatory in this environment) ---
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+
+
+        // --- Interaction Logic: Ticket Button Handler ---
+        function handleTicketClick() {
+            // Function to handle both Ticket buttons, ensuring it opens in the SAME tab.
+            // Since the button is not an <a> tag, we use window.location.href.
+            window.location.href = TICKET_LINK;
+        }
+
+        // --- Interaction Logic: Reels Carousel ---
+        function updateReelCarousel() {
+            // Calculate the width of a single reel item (100% of parent container + padding/margin)
+            const reelWidth = reelCarousel.children[0].offsetWidth; 
+            const newTranslateX = -currentReelIndex * reelWidth;
+            
+            // Apply the transformation to the carousel wrapper
+            reelCarousel.style.transform = `translateX(${newTranslateX}px)`;
+
+            // Manage play/pause state when the carousel moves
+            if (isReelSectionVisible) {
+                playActiveReel();
+            }
+        }
+
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            currentReelIndex = (currentReelIndex > 0) ? currentReelIndex - 1 : reels.length - 1;
+            updateReelCarousel();
+        });
+
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            currentReelIndex = (currentReelIndex < reels.length - 1) ? currentReelIndex + 1 : 0;
+            updateReelCarousel();
+        });
+
+        // --- Interaction Logic: Video Play/Pause based on Scroll (Intersection Observer) ---
+
+        function pauseAllReels() {
+            reels.forEach(reel => reel.pause());
+        }
+
+        function playActiveReel() {
+            pauseAllReels(); 
+            reels[currentReelIndex].currentTime = 0; 
+            reels[currentReelIndex].play().catch(e => console.log("Reel play failed:", e));
+        }
+
+        function pauseMainVideo() {
+            mainVideoFrame.style.opacity = '0';
+            mainVideoFrame.style.pointerEvents = 'none';
+        }
+
+        function playMainVideo() {
+            mainVideoFrame.style.opacity = '1';
+            mainVideoFrame.style.pointerEvents = 'auto';
+        }
+
+        // Observer for the Reels Section
+        const reelsObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                isReelSectionVisible = entry.isIntersecting;
+                if (entry.isIntersecting) {
+                    pauseMainVideo();
+                    playActiveReel();
+                } else {
+                    // Only play main video if not near the top (covered by another observer)
+                    // For now, let's keep the logic simple
+                    playMainVideo();
+                    pauseAllReels();
+                }
+            });
+        }, {
+            threshold: 0.5 
+        });
+
+        // Start observing the Reels section
+        if (reelSection) {
+            reelsObserver.observe(reelSection);
+        }
+
+        // Observer for making the header fully solid white after scrolling past the cover image
+        const coverSection = document.getElementById('home');
+        if (coverSection) {
+            const headerScrollObserver = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        // Still in the cover image area: keep translucent
+                        mainHeader.classList.add('header-translucent');
+                        mainHeader.classList.remove('bg-white', 'shadow-lg');
+                    } else {
+                        // Scrolled past the cover image: make solid white
+                        mainHeader.classList.remove('header-translucent');
+                        mainHeader.classList.add('bg-white', 'shadow-lg');
+                    }
+                });
+            }, {
+                threshold: 0.0, // Trigger immediately when cover section leaves the viewport
+                rootMargin: `-${mainHeader.offsetHeight}px 0px 0px 0px` // Adjust threshold based on header height
+            });
+            headerScrollObserver.observe(coverSection);
+        }
+
+        // Initialize carousel position on load
+        window.addEventListener('load', () => {
+            updateReelCarousel();
+            playMainVideo(); 
+        });
+
+    </script>
+</body>
+</html>
