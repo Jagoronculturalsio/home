@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JAGARAN - Annual Cultural Program</title>
+    <!-- UPDATED: Favicon (Logo) for the browser tab using the LATEST URL provided -->
+    <link rel="icon" type="image/png" href="https://lh3.googleusercontent.com/pw/AP1GczNHbNhABZ8BJa0UFNNNDlNH4OXE_ozWBGv0HGcMbg-MiLM_ppe7VJPp8MgvJaMdFsr1RgZcJ7_alcy_hExCHAg2femF59oom5YeT90gFC_TeHGONBPJ2eNqeY8ESILp7GSXEIDGY_EXlKIvUu-Jt1M=w953-h953-s-no-gm?authuser=0">
+    
     <!-- Tailwind CSS CDN -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Inter Font -->
@@ -103,6 +106,20 @@
             padding: 2rem;
             line-height: 1.6;
         }
+
+        /* --- NEW: Style for the collapsible Highlights content --- */
+        .highlights-collapse {
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out; /* Smooth collapse transition */
+        }
+        /* Style for the button's icon rotation */
+        .rotated-icon {
+            transform: rotate(180deg) !important;
+        }
+        /* Ensure the toggle button is styled attractively */
+        #toggleHighlightsBtn {
+            min-width: 280px;
+        }
     </style>
 </head>
 <body class="min-h-screen">
@@ -194,6 +211,37 @@
                     <p class="text-gray-800 text-base text-center mt-6">
                         We cordially invite you all, along with your friends and family, to this event. Your presence is earnestly awaited.
                     </p>
+                </div>
+            </section>
+            
+            <!-- NEW: Festival Highlights Toggle Section -->
+            <section id="highlights-toggle-section" class="max-w-4xl mx-auto py-8">
+                <div class="text-center">
+                    <button id="toggleHighlightsBtn" 
+                        class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full shadow-xl transition duration-300 flex items-center justify-center mx-auto"
+                        aria-expanded="false" 
+                        aria-controls="highlights-content">
+                        Highlights of Festival
+                        <svg id="toggleIcon" class="w-5 h-5 ml-2 transition-transform duration-300 transform" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                    </button>
+                </div>
+                
+                <!-- Collapsible Content -->
+                <div id="highlights-content" class="highlights-collapse mt-6" style="max-height: 0;">
+                    <div class="description-card p-6 md:p-8 bg-indigo-50 border border-indigo-200">
+                        <!-- UPDATED: Title to English only -->
+                        <h3 class="text-2xl font-extrabold text-indigo-700 mb-4 border-b pb-2">Main Attractions</h3>
+                        <ul class="space-y-3 text-left text-gray-700 list-disc pl-5">
+                            <!-- UPDATED: Content to English -->
+                            <li><span class="font-semibold text-indigo-600">Cultural Performances:</span> Various types of songs, dances, and poetry recitations.</li>
+                            <li><span class="font-semibold text-indigo-600">Interactive Workshops:</span> Sessions on traditional art and Bengali handicrafts.</li>
+                            <li><span class="font-semibold text-indigo-600">Educational Drama:</span> Educational drama focused on social awareness (on the "Jagaran" theme).</li>
+                            <li><span class="font-semibold text-indigo-600">Art Exhibition:</span> Exhibition of works by local painters and photographers.</li>
+                            <li><span class="font-semibold text-indigo-600">Food Stalls:</span> Arrangement of traditional Bengali cuisine and various delicious snacks.</li>
+                        </ul>
+                        <!-- UPDATED: Closing text to English -->
+                        <p class="mt-4 text-center text-sm text-indigo-500 font-medium">— Join us to witness this cultural awakening. —</p>
+                    </div>
                 </div>
             </section>
 
@@ -297,6 +345,12 @@
         let currentReelIndex = 0;
         let isReelSectionVisible = false;
 
+        // --- NEW Variables for Highlights Toggle ---
+        const toggleHighlightsBtn = document.getElementById('toggleHighlightsBtn');
+        const highlightsContent = document.getElementById('highlights-content');
+        const toggleIcon = document.getElementById('toggleIcon');
+
+
         // --- Firebase/Auth Setup (Mandatory in this environment) ---
         // NOTE: Although not strictly used for data storage here, 
         // this block is included as per the single-file environment requirements.
@@ -314,6 +368,24 @@
             window.location.href = TICKET_LINK;
         }
 
+        // --- NEW: Interaction Logic: Highlights Toggle ---
+        function toggleHighlights() {
+            const isExpanded = toggleHighlightsBtn.getAttribute('aria-expanded') === 'true';
+
+            if (isExpanded) {
+                // Collapse the content
+                highlightsContent.style.maxHeight = '0';
+                toggleHighlightsBtn.setAttribute('aria-expanded', 'false');
+                toggleIcon.classList.remove('rotated-icon');
+            } else {
+                // Expand the content
+                // Set maxHeight to scrollHeight to allow smooth transition to full height
+                highlightsContent.style.maxHeight = highlightsContent.scrollHeight + 'px';
+                toggleHighlightsBtn.setAttribute('aria-expanded', 'true');
+                toggleIcon.classList.add('rotated-icon');
+            }
+        }
+        
         // --- NEW: Function to control iframe video state (Play/Pause) ---
         function setReelState(iframe, state) {
             const src = iframe.src;
@@ -373,7 +445,6 @@
             // Pause all reels before changing
             pauseAllReels();
             currentReelIndex = (currentReelIndex < reelContainers.length - 1) ? currentReelIndex + 1 : 0;
-            currentReelIndex = (currentReelIndex < reelContainers.length - 1) ? currentReelIndex + 1 : 0;
             updateReelCarousel();
         });
 
@@ -415,14 +486,19 @@
             reelsObserver.observe(reelSection);
         }
 
-        // Initialize carousel position and iframe state on load
+        // Initialize carousel position and iframe state and attach event listeners on load
         window.addEventListener('load', () => {
-            // IMPORTANT: Pre-process iframes to save original src and pause them initially
+             // IMPORTANT: Pre-process iframes to save original src and pause them initially
             reelContainers.forEach(iframe => {
                 iframe.dataset.originalSrc = iframe.src;
                 setReelState(iframe, 'pause'); // Pause all reels
             });
-
+            
+            // Attach toggle listener
+            if (toggleHighlightsBtn) {
+                toggleHighlightsBtn.addEventListener('click', toggleHighlights);
+            }
+            
             updateReelCarousel();
             // Start main video immediately (it's already set to autoplay via src URL)
             playMainVideo(); 
