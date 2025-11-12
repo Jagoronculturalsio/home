@@ -11,8 +11,38 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            background-color: #f7f7f7;
+            /* Remove default body background, main content will define its own */
+            background-color: #f7f7f7; 
         }
+        /* Custom CSS for Cover Image and Translucent Header */
+        .header-translucent {
+            /* White background with 30% opacity */
+            background-color: rgba(255, 255, 255, 0.3); 
+            /* Slightly blur the content behind the navigation for readability */
+            backdrop-filter: blur(8px); 
+            -webkit-backdrop-filter: blur(8px);
+        }
+        .cover-section {
+            /* Set the user-provided image as background */
+            background-image: url('https://lh3.googleusercontent.com/pw/AP1GczOhA7XE6j52PjDORCp4xQiYSFLdOxGgg-T26--rWsfCcHIzdPcC5IlSqlswhwX6TceiqtMjbpPSVdyasZX9odYELFMCBniuueXWH-VXAK7iksoECwU31sAWi-qFuWqZXQ90IDO6cLHvGBLCwjKewOE=w1920-h378-s-no-gm?authuser=0');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            width: 100%;
+            height: 40vh; /* Responsive height (40% of viewport height) */
+            position: relative;
+        }
+        .cover-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.1); /* Subtle dark overlay */
+        }
+        /* The .cover-text styles are removed as the text is no longer over the image. */
+        
         /* Custom styles for video container aspect ratio */
         .video-container {
             position: relative;
@@ -67,20 +97,20 @@
     </style>
 </head>
 <body class="min-h-screen">
-    <div id="app" class="container mx-auto p-4 md:p-8">
 
-        <!-- Navigation Bar -->
-        <header class="flex flex-col md:flex-row justify-between items-center bg-white p-4 md:p-6 rounded-xl shadow-lg mb-12 sticky top-0 z-50">
+    <!-- Navigation Bar (FIXED and Translucent) -->
+    <header id="main-header" class="fixed top-0 left-0 right-0 z-50 header-translucent p-3 md:p-4 transition-colors duration-300">
+        <!-- Inner container to keep navigation items centralized like the rest of the content -->
+        <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
             
             <!-- Left Group: JAGARAN (Above) and Home (Highlighted) -->
-            <div class="flex flex-col md:flex-row items-center mb-4 md:mb-0">
+            <div class="flex flex-col md:flex-row items-center mb-2 md:mb-0">
                 <!-- JAGARAN Text -->
-                <div class="text-3xl font-extrabold text-indigo-600 tracking-wider mb-2 md:mb-0 md:mr-6">
-                    <!-- Updated: Link to Home page URL -->
-                    <a href="https://vdoadtr.github.io/JAGORON-Home/">JAGORON</a>
+                <div class="text-3xl font-extrabold text-indigo-800 tracking-wider mb-2 md:mb-0 md:mr-6">
+                    <a href="https://jagoronculturalsio.github.io/home/">JAGARAN</a>
                 </div>
                 <!-- Home Button (Highlighted/Active) -->
-                <a href="https://vdoadtr.github.io/JAGORON-Home/" id="homeButton" 
+                <a href="https://jagoronculturalsio.github.io/home/" id="homeButton" 
                    class="nav-button nav-active px-4 py-2 rounded-lg transition duration-300">
                     Home
                 </a>
@@ -88,34 +118,40 @@
             
             <!-- Right Group: Nav Links (About, Contact, Address, Ticket) -->
             <nav class="flex flex-wrap justify-center space-x-2 md:space-x-4 font-semibold">
-                <!-- Updated: Link to About page URL -->
-                <a href="https://vdoadtr.github.io/JAGORON-About/" class="nav-button p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition duration-300">About</a>
-                <!-- Updated: Link to Contact page URL -->
-                <a href="https://vdoadtr.github.io/JAGORON-Contact/" class="nav-button p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition duration-300">Contact</a>
-                <!-- Updated: Link to Address page URL -->
-                <a href="https://vdoadtr.github.io/JAGORON-Address/" class="nav-button p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition duration-300">Address</a>
-                <!-- Ticket button - Now standard style, but link is handled by JS -->
+                <a href="https://jagoronculturalsio.github.io/about/" class="nav-button p-2 rounded-lg text-gray-800 hover:bg-gray-100 transition duration-300">About</a>
+                <a href="https://jagoronculturalsio.github.io/contact/" class="nav-button p-2 rounded-lg text-gray-800 hover:bg-gray-100 transition duration-300">Contact</a>
+                <a href="https://jagoronculturalsio.github.io/address/" class="nav-button p-2 rounded-lg text-gray-800 hover:bg-gray-100 transition duration-300">Address</a>
+                <!-- Ticket button -->
                 <button id="navTicketButton" 
-                    class="nav-button text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-100 transition duration-300 shadow-sm border border-gray-200"
+                    class="nav-button text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-100 transition duration-300 shadow-sm border border-gray-200"
                     onclick="handleTicketClick()">
                     Ticket
                 </button>
             </nav>
-        </header>
+        </div>
+    </header>
 
-        <main class="space-y-16">
+    <!-- Main Content Container (Starts after cover image) -->
+    <div id="app">
 
-            <!-- Main Title Section -->
-            <section id="home" class="text-center pt-8">
-                <h1 class="text-5xl md:text-7xl font-black text-gray-800 mb-4">
-                    Experience <span class="text-indigo-600">JAGORON</span>
-                </h1>
-                <p class="text-xl text-gray-500">The Annual Cultural Awakening. Join us for an unforgettable celebration.</p>
-            </section>
+        <!-- Main Title Section (Cover Image) -->
+        <!-- No content inside this section, only the background image and the fixed navigation bar above it. -->
+        <section id="home" class="cover-section"></section>
+        
+        <!-- Main Title Text (Moved BELOW the cover image) -->
+        <div class="text-center py-10 md:py-16 bg-white shadow-md"> 
+            <h1 class="text-4xl md:text-6xl font-black mb-2 text-gray-800">
+                <span class="text-indigo-600">JAGARAN</span> Cultural Festival
+            </h1>
+            <p class="text-xl md:text-2xl font-light text-gray-600">The Annual Cultural Awakening. Join us for an unforgettable celebration.</p>
+        </div>
+
+        <!-- Main content below the banner. Added a small top margin to space it out nicely. -->
+        <main class="container mx-auto p-4 md:p-8 space-y-16 mt-8 md:mt-12"> 
 
             <!-- 1. Main YouTube Video Section -->
             <section id="main-video-section" class="max-w-4xl mx-auto" aria-label="Program Details Video">
-                <h2 class="text-3xl font-bold text-gray-700 mb-4 text-center">Program Highlights (Video Details)</h2>
+                <h2 class="text-3xl font-bold text-gray-700 mb-4 text-center">Welcome to our festival.</h2>
                 <div id="mainVideoContainer" class="video-container">
                     <!-- 
                         YouTube embed URL parameters:
@@ -128,7 +164,7 @@
                         src="https://www.youtube.com/embed/mc1xggktlro?autoplay=1&loop=1&playlist=mc1xggktlro&controls=0&playsinline=1"
                         allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" 
                         allowfullscreen
-                        title="JAGORON Program Details Video"
+                        title="JAGARAN Program Details Video"
                         frameborder="0">
                     </iframe>
                 </div>
@@ -139,7 +175,7 @@
 
             <!-- 2. Reels/Short Videos Section (Carousel) -->
             <section id="reels-section" class="py-10 bg-white rounded-xl shadow-xl">
-                <h2 class="text-3xl font-bold text-gray-700 mb-6 text-center">Sneak Peek - JAGORON Reels</h2>
+                <h2 class="text-3xl font-bold text-gray-700 mb-6 text-center">Sneak Peek - JAGARAN Reels</h2>
                 <div class="relative max-w-lg mx-auto overflow-hidden">
                     
                     <!-- Reels Container -->
@@ -175,151 +211,4 @@
                         <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
                     </button>
                     <button id="nextBtn" class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:bg-gray-100 transition" aria-label="Next Reel">
-                        <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                    </button>
-                    
-                </div>
-            </section>
-
-            <!-- 3. BOOK TICKET Call-to-Action (CTA) Button -->
-            <section class="text-center py-16">
-                <h2 class="text-4xl font-extrabold text-gray-800 mb-6">Ready to Join the Celebration?</h2>
-                <button id="ctaTicketButton" 
-                    class="ticket-button-cta text-white font-bold text-xl px-12 py-4 rounded-full shadow-2xl uppercase tracking-wider"
-                    onclick="handleTicketClick()">
-                    BOOK TICKET NOW
-                </button>
-                <p class="text-sm text-gray-500 mt-4">Limited Seats Available. Secure your spot today!</p>
-            </section>
-
-            <!-- Placeholder anchors for navigation links (as content sections were removed) -->
-            <div id="about-placeholder"></div>
-            <div id="contact-placeholder"></div>
-            <div id="address-placeholder"></div>
-
-        </main>
-    </div>
-
-    <script>
-        // --- Configuration & Initialization ---
-        // Updated: Using the external link provided by the user for the Ticket page
-        const TICKET_LINK = "https://vdoadtr.github.io/JAGORON-Ticket/"; 
-        const reels = document.querySelectorAll('.reel-video');
-        const reelCarousel = document.getElementById('reelCarousel');
-        const reelSection = document.getElementById('reels-section');
-        const mainVideoFrame = document.getElementById('mainVideoFrame');
-        const mainVideoContainer = document.getElementById('main-video-section');
-
-        let currentReelIndex = 0;
-        let isReelSectionVisible = false;
-
-        // --- Firebase/Auth Setup (Mandatory in this environment) ---
-        // NOTE: Although not strictly used for data storage here, 
-        // this block is included as per the single-file environment requirements.
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
-        // Placeholder for future use:
-        // import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        // import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-
-
-        // --- Interaction Logic: Ticket Button Handler ---
-        function handleTicketClick() {
-            // Function to handle both Ticket buttons, ensuring it opens in the SAME tab.
-            // Since the button is not an <a> tag, we use window.location.href.
-            window.location.href = TICKET_LINK;
-        }
-
-        // --- Interaction Logic: Reels Carousel ---
-        function updateReelCarousel() {
-            // Calculate the width of a single reel item (100% of parent container + padding/margin)
-            const reelWidth = reelCarousel.children[0].offsetWidth; 
-            const newTranslateX = -currentReelIndex * reelWidth;
-            
-            // Apply the transformation to the carousel wrapper
-            reelCarousel.style.transform = `translateX(${newTranslateX}px)`;
-
-            // Manage play/pause state when the carousel moves
-            if (isReelSectionVisible) {
-                playActiveReel();
-            }
-        }
-
-        document.getElementById('prevBtn').addEventListener('click', () => {
-            currentReelIndex = (currentReelIndex > 0) ? currentReelIndex - 1 : reels.length - 1;
-            updateReelCarousel();
-        });
-
-        document.getElementById('nextBtn').addEventListener('click', () => {
-            currentReelIndex = (currentReelIndex < reels.length - 1) ? currentReelIndex + 1 : 0;
-            updateReelCarousel();
-        });
-
-        // --- Interaction Logic: Video Play/Pause based on Scroll (Intersection Observer) ---
-
-        function pauseAllReels() {
-            reels.forEach(reel => reel.pause());
-        }
-
-        function playActiveReel() {
-            // Pause all first
-            pauseAllReels(); 
-            // Play the currently active reel
-            reels[currentReelIndex].currentTime = 0; // Rewind to start
-            reels[currentReelIndex].play().catch(e => console.log("Reel play failed (user interaction needed or mute policy):", e));
-        }
-
-        function pauseMainVideo() {
-            // YouTube iframe cannot be reliably paused without the YouTube Player API.
-            // The simplest workaround is to hide the iframe or replace its source to stop playback.
-            // Here, we'll stop the user's perception of it playing by setting its display to none.
-            mainVideoFrame.style.opacity = '0';
-            mainVideoFrame.style.pointerEvents = 'none';
-        }
-
-        function playMainVideo() {
-            // Simply make the iframe visible again. Since it was set with autoplay, 
-            // the video is likely still loaded and paused in the background or restarting.
-            mainVideoFrame.style.opacity = '1';
-            mainVideoFrame.style.pointerEvents = 'auto';
-            // Note: True YouTube pause/play requires the API, which we avoid for single-file simplicity.
-            // We rely on the autoplay parameter and visual hide/show.
-        }
-
-        // Observer for the Reels Section
-        const reelsObserver = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                isReelSectionVisible = entry.isIntersecting;
-                if (entry.isIntersecting) {
-                    // Reels are in view: Pause Main Video and Play Active Reel
-                    pauseMainVideo();
-                    playActiveReel();
-                } else {
-                    // Reels are NOT in view: Play Main Video and Pause All Reels
-                    playMainVideo();
-                    pauseAllReels();
-                }
-            });
-        }, {
-            threshold: 0.5 // Trigger when 50% of the reels section is visible
-        });
-
-        // Start observing the Reels section
-        if (reelSection) {
-            reelsObserver.observe(reelSection);
-        }
-
-        // Initialize carousel position on load
-        window.addEventListener('load', () => {
-            updateReelCarousel();
-            // Start main video immediately (it's already set to autoplay via src URL)
-            playMainVideo(); 
-        });
-
-    </script>
-</body>
-</html>
-
-
-
-
+                        <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="
