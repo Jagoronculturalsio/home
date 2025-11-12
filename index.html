@@ -11,54 +11,17 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            /* Remove default body background, main content will define its own */
-            background-color: #f7f7f7; 
+            background-color: #f7f7f7;
         }
-        /* Custom CSS for Cover Image and Translucent Header */
-        .header-translucent {
-            /* White background with 30% opacity */
-            background-color: rgba(255, 255, 255, 0.3); 
-            /* Slightly blur the content behind the navigation for readability */
-            backdrop-filter: blur(8px); 
-            -webkit-backdrop-filter: blur(8px);
-        }
-        .cover-section {
-            /* Set the MOBILE image as default (mobile-first design) */
-            background-image: url('https://lh3.googleusercontent.com/pw/AP1GczNkfNhxA5xttdZ6IjIR1WZPUPRUoSCltiiiCSa3YVp7aiA5irFHaFFSZXSNKrfID_RJ9Cb_FMEaWcersscoLka0i8yHGsCL8JoICR6cf4KRdBfhLkGQ6kxj-KGCvxRx0v9rqSVNb8pOMZd-ROkqLGY=w1906-h953-s-no-gm?authuser=0');
-            
-            /* **FIX: Reverted to 'cover' for mobile for full-screen fill** */
-            background-size: cover; 
-            
+        /* Custom CSS for the new full-width banner image */
+        .banner-image {
+            background-image: url('https://lh3.googleusercontent.com/pw/AP1GczM_1MBPvNoH0fhsAT23iapbzMqAyosqu4WpEJ4mhrD-Irg5pB5dZE90NwL7KifjjXqe_7EcNQkRHXpzyUr1R3HVONY2HmQ91jeP28BDxOa-AodBBGe-4gUDy8NpGxiNbxqadAqYJJdd9ldyFPm-w9M=w1920-h378-s-no-gm?authuser=0');
+            background-size: cover;
             background-position: center;
-            background-repeat: no-repeat;
-            /* Removed black background as cover will fill the space */
-            background-color: transparent; 
             width: 100%;
-            height: 40vh; /* Responsive height (40% of viewport height) */
-            position: relative;
         }
-        /* Override with DESKTOP image for medium and larger screens (md: 768px and up) */
-        @media (min-width: 768px) {
-            .cover-section {
-                background-image: url('https://lh3.googleusercontent.com/pw/AP1GczOhA7XE6j52PjDORCp4xQiYSFLdOxGgg-T26--rWsfCcHIzdPcC5IlSqlswhwX6TceiqtMjbpPSVdyasZX9odYELFMCBniuueXWH-VXAK7iksoECwU31sAWi-qFuWqZXQ90IDO6cLHvGBLCwjKewOE=w1920-h378-s-no-gm?authuser=0');
-                /* Explicitly set back to 'cover' for desktop as requested */
-                background-size: cover; 
-                /* Remove black background on desktop */
-                background-color: transparent; 
-            }
-        }
-        .cover-section::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.1); /* Subtle dark overlay */
-        }
-        /* The .cover-text styles are removed as the text is no longer over the image. */
         
-        /* Custom styles for video container aspect ratio */
+        /* Custom styles for video container aspect ratio (Main Video) */
         .video-container {
             position: relative;
             width: 100%;
@@ -76,19 +39,41 @@
             width: 100%;
             height: 100%;
         }
-        .reel-video {
+        
+        /* --- NEW: Styles for the vertical YouTube Reels (Carousel) --- */
+        /* Make each reel wrapper take full width */
+        .reel-container-wrapper > div {
+             width: 100%;
+             flex-shrink: 0;
+        }
+        /* Style for the vertical Reel container */
+        .reel-video-container {
+            position: relative;
             width: 100%;
-            flex-shrink: 0;
-            height: 400px; /* Fixed height for reels */
-            object-fit: cover;
+            padding-bottom: 177.77%; /* 9:16 aspect ratio (Height is 177.77% of width) */
+            height: 0;
+            overflow: hidden;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+        
+        .reel-video-container iframe {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
             border-radius: 0.5rem;
         }
+        /* --- END NEW STYLES --- */
+
         .reel-container-wrapper {
             transition: transform 0.5s ease-in-out;
         }
+        /* Adjusting nav-button hover state for translucent background */
         .nav-button:hover {
             color: #4f46e5;
-            background-color: #eef2ff;
+            background-color: rgba(255, 255, 255, 0.6); /* Slightly more visible on hover */
         }
         /* Style for the ticket button */
         .ticket-button-cta {
@@ -109,19 +94,27 @@
             background-color: #4338ca; /* indigo-700 */
             color: #ffffff;
         }
+        
+        /* Style for the description section */
+        .description-card {
+            background-color: #ffffff;
+            border-radius: 0.75rem;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            padding: 2rem;
+            line-height: 1.6;
+        }
     </style>
 </head>
 <body class="min-h-screen">
 
-    <!-- Navigation Bar (FIXED and Translucent) -->
-    <header id="main-header" class="fixed top-0 left-0 right-0 z-50 header-translucent p-3 md:p-4 transition-colors duration-300">
-        <!-- Inner container to keep navigation items centralized like the rest of the content -->
+    <!-- 1. Navigation Bar (Fixed Overlay with 30% opacity) -->
+    <header class="fixed top-0 left-0 right-0 z-50 bg-white/30 backdrop-blur-sm p-4 md:p-6 transition duration-300">
         <div class="container mx-auto flex flex-col md:flex-row justify-between items-center">
             
             <!-- Left Group: JAGARAN (Above) and Home (Highlighted) -->
-            <div class="flex flex-col md:flex-row items-center mb-2 md:mb-0">
+            <div class="flex flex-col md:flex-row items-center mb-4 md:mb-0">
                 <!-- JAGARAN Text -->
-                <div class="text-3xl font-extrabold text-indigo-800 tracking-wider mb-2 md:mb-0 md:mr-6">
+                <div class="text-3xl font-extrabold text-indigo-600 tracking-wider mb-2 md:mb-0 md:mr-6">
                     <a href="https://jagoronculturalsio.github.io/home/">JAGARAN</a>
                 </div>
                 <!-- Home Button (Highlighted/Active) -->
@@ -133,12 +126,12 @@
             
             <!-- Right Group: Nav Links (About, Contact, Address, Ticket) -->
             <nav class="flex flex-wrap justify-center space-x-2 md:space-x-4 font-semibold">
-                <a href="https://jagoronculturalsio.github.io/about/" class="nav-button p-2 rounded-lg text-gray-800 hover:bg-gray-100 transition duration-300">About</a>
-                <a href="https://jagoronculturalsio.github.io/contact/" class="nav-button p-2 rounded-lg text-gray-800 hover:bg-gray-100 transition duration-300">Contact</a>
-                <a href="https://jagoronculturalsio.github.io/address/" class="nav-button p-2 rounded-lg text-gray-800 hover:bg-gray-100 transition duration-300">Address</a>
+                <a href="https://jagoronculturalsio.github.io/about/" class="nav-button p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition duration-300">About</a>
+                <a href="https://jagoronculturalsio.github.io/contact/" class="nav-button p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition duration-300">Contact</a>
+                <a href="https://jagoronculturalsio.github.io/address/" class="nav-button p-2 rounded-lg text-gray-700 hover:bg-gray-100 transition duration-300">Address</a>
                 <!-- Ticket button -->
                 <button id="navTicketButton" 
-                    class="nav-button text-gray-800 px-4 py-2 rounded-lg hover:bg-gray-100 transition duration-300 shadow-sm border border-gray-200"
+                    class="nav-button text-gray-700 px-4 py-2 rounded-lg hover:bg-gray-100 transition duration-300 shadow-sm border border-gray-200"
                     onclick="handleTicketClick()">
                     Ticket
                 </button>
@@ -146,27 +139,25 @@
         </div>
     </header>
 
-    <!-- Main Content Container (Starts after cover image) -->
-    <div id="app">
+    <!-- 2. Banner/Hero Section (Full Width) -->
+    <div id="banner" class="banner-image w-full h-[35vh] md:h-[40vh] mt-[70px] md:mt-[92px]"></div>
+    
+    <!-- 3. Main Content Wrapper (Centered) -->
+    <div id="app-content" class="container mx-auto p-4 md:p-8 pt-0">
 
-        <!-- Main Title Section (Cover Image) -->
-        <!-- No content inside this section, only the background image and the fixed navigation bar above it. -->
-        <section id="home" class="cover-section"></section>
-        
-        <!-- Main Title Text (Moved BELOW the cover image) -->
-        <div class="text-center py-10 md:py-16 bg-white shadow-md"> 
-            <h1 class="text-4xl md:text-6xl font-black mb-2 text-gray-800">
+        <!-- Main Title Section (BELOW BANNER) -->
+        <section id="home" class="text-center pt-8">
+            <h1 class="text-4xl md:text-6xl font-black text-gray-800 mb-4">
                 <span class="text-indigo-600">JAGARAN</span> Cultural Festival
             </h1>
-            <p class="text-xl md:text-2xl font-light text-gray-600">The Annual Cultural Awakening. Join us for an unforgettable celebration.</p>
-        </div>
+            <p class="text-xl text-gray-500">The Annual Cultural Awakening. Join us for an unforgettable celebration.</p>
+        </section>
 
-        <!-- Main content below the banner. Added a small top margin to space it out nicely. -->
-        <main class="container mx-auto p-4 md:p-8 space-y-16 mt-8 md:mt-12"> 
+        <main class="space-y-16">
 
             <!-- 1. Main YouTube Video Section -->
             <section id="main-video-section" class="max-w-4xl mx-auto" aria-label="Program Details Video">
-                <h2 class="text-3xl font-bold text-gray-700 mb-4 text-center">Welcome to our festival.</h2>
+                <h2 class="text-3xl font-bold text-gray-700 mb-4 text-center">Program Highlights (Video Details)</h2>
                 <div id="mainVideoContainer" class="video-container">
                     <!-- 
                         YouTube embed URL parameters:
@@ -183,52 +174,26 @@
                         frameborder="0">
                     </iframe>
                 </div>
-                <div class="text-center text-sm text-gray-400 mt-2">
-                    Note: Video is muted by default for autoplay compliance. Please unmute manually if needed.
-                </div>
+                <!-- The small note below the video has been removed -->
             </section>
 
-            <!-- 2. Reels/Short Videos Section (Carousel) -->
-            <section id="reels-section" class="py-10 bg-white rounded-xl shadow-xl">
-                <h2 class="text-3xl font-bold text-gray-700 mb-6 text-center">Sneak Peek - JAGARAN Reels</h2>
-                <div class="relative max-w-lg mx-auto overflow-hidden">
-                    
-                    <!-- Reels Container -->
-                    <div id="reelCarousel" class="reel-container-wrapper flex">
-                        <!-- Reel 1 -->
-                        <div class="p-2">
-                            <video id="reel1" class="reel-video" controls loop playsinline preload="auto">
-                                <source src="https://assets.mixkit.co/videos/preview/mixkit-girl-smiling-on-a-beach-at-sunset-41804-large.mp4" type="video/mp4">
-                                Your browser does not support the video tag.
-                            </video>
-                            <p class="text-center text-sm text-gray-500 mt-2">Past Year's Vibe</p>
-                        </div>
-                        <!-- Reel 2 -->
-                        <div class="p-2">
-                            <video id="reel2" class="reel-video" controls loop playsinline preload="auto">
-                                <source src="https://assets.mixkit.co/videos/preview/mixkit-close-up-of-a-man-doing-a-stunt-on-a-skateboard-35074-large.mp4" type="video/mp4">
-                                Your browser does not support the video tag.
-                            </video>
-                            <p class="text-center text-sm text-gray-500 mt-2">Dance Performance Glimpse</p>
-                        </div>
-                        <!-- Reel 3 -->
-                        <div class="p-2">
-                            <video id="reel3" class="reel-video" controls loop playsinline preload="auto">
-                                <source src="https://assets.mixkit.co/videos/preview/mixkit-young-man-playing-the-guitar-in-nature-1510-large.mp4" type="video/mp4">
-                                Your browser does not support the video tag.
-                            </video>
-                            <p class="text-center text-sm text-gray-500 mt-2">Music Night</p>
-                        </div>
-                    </div>
-
-                    <!-- Left/Right Controls -->
-                    <button id="prevBtn" class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:bg-gray-100 transition" aria-label="Previous Reel">
-                        <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
-                    </button>
-                    <button id="nextBtn" class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:bg-gray-100 transition" aria-label="Next Reel">
-                        <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
-                    </button>
-                    
+            <!-- 2. Description Section (UPDATED) -->
+            <section id="description-section" class="max-w-4xl mx-auto">
+                <!-- NEW BOLD, CENTERED TITLE -->
+                <h2 class="text-3xl font-bold text-gray-700 mb-4 text-center">Description</h2>
+                <div class="description-card">
+                    <p class="text-gray-700 text-base mb-4">
+                        Culture and entertainment are an integral part of our lives. To provide a refreshing escape from the busyness of our daily routines, Tamaddun Shilpigosthi is delighted to present a wholesome cultural program for you to enjoy with family, relatives, and friends.
+                    </p>
+                    <p class="text-gray-700 text-base mb-4">
+                        Culture reflects the stories of joy, sorrow, and emotions hidden within our social lives. It can spark a revolution or bring about a change in society's traditional mindset. The practice of value-based culture builds a healthy society. Our mission is to counter vulgarity and cultural degradation by promoting an educational and enlightening culture.
+                    </p>
+                    <p class="text-gray-700 text-base mb-4">
+                        With this goal in mind, a historic cultural event titled the "Jagaran Cultural Festival" is set to take place on December 28th at Gopalpur House, near the airport in the North 24 Parganas district.
+                    </p>
+                    <p class="text-gray-800 text-base text-center mt-6">
+                        We cordially invite you all, along with your friends and family, to this event. Your presence is earnestly awaited.
+                    </p>
                 </div>
             </section>
 
@@ -243,6 +208,71 @@
                 <p class="text-sm text-gray-500 mt-4">Limited Seats Available. Secure your spot today!</p>
             </section>
 
+            <!-- 4. Reels/Short Videos Section (Carousel) - NOW USING YOUTUBE EMBEDS -->
+            <section id="reels-section" class="py-10 bg-white rounded-xl shadow-xl">
+                <h2 class="text-3xl font-bold text-gray-700 mb-6 text-center">Sneak Peek - JAGARAN Reels (YouTube)</h2>
+                <div class="relative max-w-lg mx-auto overflow-hidden">
+                    
+                    <!-- Reels Container -->
+                    <div id="reelCarousel" class="reel-container-wrapper flex">
+                        
+                        <!-- Reel 1 (Cultural Program Snippet 1) -->
+                        <div class="p-2">
+                            <div class="reel-video-container">
+                                <iframe 
+                                    id="reelFrame1"
+                                    src="https://www.youtube.com/embed/BwKjGy2U82Y?controls=0&modestbranding=1&rel=0&playsinline=1&enablejsapi=1"
+                                    frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen
+                                    title="JAGARAN Reel 1 - Cultural Program Snippet">
+                                </iframe>
+                            </div>
+                            <p class="text-center text-sm text-gray-500 mt-2">Cultural Program Snippet 1</p>
+                        </div>
+                        
+                        <!-- Reel 2 (College Cultural Dance) -->
+                        <div class="p-2">
+                            <div class="reel-video-container">
+                                <iframe 
+                                    id="reelFrame2"
+                                    src="https://www.youtube.com/embed/tq9pvU5eYyg?controls=0&modestbranding=1&rel=0&playsinline=1&enablejsapi=1"
+                                    frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen
+                                    title="JAGARAN Reel 2 - College Cultural Dance">
+                                </iframe>
+                            </div>
+                            <p class="text-center text-sm text-gray-500 mt-2">College Cultural Dance</p>
+                        </div>
+                        
+                        <!-- Reel 3 (Dancing Program Glimpse) -->
+                        <div class="p-2">
+                            <div class="reel-video-container">
+                                <iframe 
+                                    id="reelFrame3"
+                                    src="https://www.youtube.com/embed/2sHImLqHuzs?controls=0&modestbranding=1&rel=0&playsinline=1&enablejsapi=1"
+                                    frameborder="0"
+                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                    allowfullscreen
+                                    title="JAGARAN Reel 3 - Dancing Program Glimpse">
+                                </iframe>
+                            </div>
+                            <p class="text-center text-sm text-gray-500 mt-2">Dancing Program Glimpse</p>
+                        </div>
+                    </div>
+
+                    <!-- Left/Right Controls -->
+                    <button id="prevBtn" class="absolute left-2 top-1/2 transform -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:bg-gray-100 transition" aria-label="Previous Reel">
+                        <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                    </button>
+                    <button id="nextBtn" class="absolute right-2 top-1/2 transform -translate-y-1/2 bg-white p-3 rounded-full shadow-lg hover:bg-gray-100 transition" aria-label="Next Reel">
+                        <svg class="w-6 h-6 text-gray-700" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                    </button>
+                    
+                </div>
+            </section>
+            
             <!-- Placeholder anchors for navigation links (as content sections were removed) -->
             <div id="about-placeholder"></div>
             <div id="contact-placeholder"></div>
@@ -255,19 +285,26 @@
         // --- Configuration & Initialization ---
         // Updated: Using the external link provided by the user for the Ticket page
         const TICKET_LINK = "https://jagoronculturalsio.github.io/ticket/"; 
-        const reels = document.querySelectorAll('.reel-video');
+        
+        // NEW: Select all YouTube iframe elements in the carousel
+        const reelContainers = document.querySelectorAll('#reelCarousel > div > .reel-video-container > iframe');
+        
         const reelCarousel = document.getElementById('reelCarousel');
         const reelSection = document.getElementById('reels-section');
         const mainVideoFrame = document.getElementById('mainVideoFrame');
         const mainVideoContainer = document.getElementById('main-video-section');
-        const mainHeader = document.getElementById('main-header');
 
         let currentReelIndex = 0;
         let isReelSectionVisible = false;
 
         // --- Firebase/Auth Setup (Mandatory in this environment) ---
+        // NOTE: Although not strictly used for data storage here, 
+        // this block is included as per the single-file environment requirements.
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
         const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        // Placeholder for future use:
+        // import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        // import { getAuth, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
 
         // --- Interaction Logic: Ticket Button Handler ---
@@ -277,9 +314,42 @@
             window.location.href = TICKET_LINK;
         }
 
+        // --- NEW: Function to control iframe video state (Play/Pause) ---
+        function setReelState(iframe, state) {
+            const src = iframe.src;
+            
+            if (state === 'play') {
+                // If it's paused (src is 'about:blank'), reload the original source to make it play.
+                if (src.includes("about:blank")) {
+                    iframe.src = iframe.dataset.originalSrc; 
+                }
+            } else if (state === 'pause') {
+                // If it's currently playing (src is the video link), pause it by loading 'about:blank'.
+                // First, store the original src if not already done.
+                if (!iframe.dataset.originalSrc) {
+                    iframe.dataset.originalSrc = src;
+                }
+                if (!src.includes("about:blank")) {
+                    iframe.src = "about:blank";
+                }
+            }
+        }
+
+        function pauseAllReels() {
+            reelContainers.forEach(iframe => setReelState(iframe, 'pause'));
+        }
+
+        function playActiveReel() {
+            // Pause all first before playing the active one
+            pauseAllReels(); 
+            // Play the currently active reel
+            setReelState(reelContainers[currentReelIndex], 'play');
+        }
+
         // --- Interaction Logic: Reels Carousel ---
         function updateReelCarousel() {
             // Calculate the width of a single reel item (100% of parent container + padding/margin)
+            // Use the first child's wrapper div's offsetWidth
             const reelWidth = reelCarousel.children[0].offsetWidth; 
             const newTranslateX = -currentReelIndex * reelWidth;
             
@@ -293,33 +363,31 @@
         }
 
         document.getElementById('prevBtn').addEventListener('click', () => {
-            currentReelIndex = (currentReelIndex > 0) ? currentReelIndex - 1 : reels.length - 1;
+            // Pause all reels before changing
+            pauseAllReels(); 
+            currentReelIndex = (currentReelIndex > 0) ? currentReelIndex - 1 : reelContainers.length - 1;
             updateReelCarousel();
         });
 
         document.getElementById('nextBtn').addEventListener('click', () => {
-            currentReelIndex = (currentReelIndex < reels.length - 1) ? currentReelIndex + 1 : 0;
+            // Pause all reels before changing
+            pauseAllReels();
+            currentReelIndex = (currentReelIndex < reelContainers.length - 1) ? currentReelIndex + 1 : 0;
+            currentReelIndex = (currentReelIndex < reelContainers.length - 1) ? currentReelIndex + 1 : 0;
             updateReelCarousel();
         });
 
         // --- Interaction Logic: Video Play/Pause based on Scroll (Intersection Observer) ---
 
-        function pauseAllReels() {
-            reels.forEach(reel => reel.pause());
-        }
-
-        function playActiveReel() {
-            pauseAllReels(); 
-            reels[currentReelIndex].currentTime = 0; 
-            reels[currentReelIndex].play().catch(e => console.log("Reel play failed:", e));
-        }
-
         function pauseMainVideo() {
+            // Workaround: Stop the user's perception of it playing by setting its display to none.
+            // Note: We cannot reliably pause the YouTube iframe without the YouTube Player API.
             mainVideoFrame.style.opacity = '0';
             mainVideoFrame.style.pointerEvents = 'none';
         }
 
         function playMainVideo() {
+            // Simply make the iframe visible again.
             mainVideoFrame.style.opacity = '1';
             mainVideoFrame.style.pointerEvents = 'auto';
         }
@@ -329,17 +397,17 @@
             entries.forEach(entry => {
                 isReelSectionVisible = entry.isIntersecting;
                 if (entry.isIntersecting) {
+                    // Reels are in view: Pause Main Video and Play Active Reel
                     pauseMainVideo();
                     playActiveReel();
                 } else {
-                    // Only play main video if not near the top (covered by another observer)
-                    // For now, let's keep the logic simple
+                    // Reels are NOT in view: Play Main Video and Pause All Reels
                     playMainVideo();
                     pauseAllReels();
                 }
             });
         }, {
-            threshold: 0.5 
+            threshold: 0.5 // Trigger when 50% of the reels section is visible
         });
 
         // Start observing the Reels section
@@ -347,31 +415,16 @@
             reelsObserver.observe(reelSection);
         }
 
-        // Observer for making the header fully solid white after scrolling past the cover image
-        const coverSection = document.getElementById('home');
-        if (coverSection) {
-            const headerScrollObserver = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        // Still in the cover image area: keep translucent
-                        mainHeader.classList.add('header-translucent');
-                        mainHeader.classList.remove('bg-white', 'shadow-lg');
-                    } else {
-                        // Scrolled past the cover image: make solid white
-                        mainHeader.classList.remove('header-translucent');
-                        mainHeader.classList.add('bg-white', 'shadow-lg');
-                    }
-                });
-            }, {
-                threshold: 0.0, // Trigger immediately when cover section leaves the viewport
-                rootMargin: `-${mainHeader.offsetHeight}px 0px 0px 0px` // Adjust threshold based on header height
-            });
-            headerScrollObserver.observe(coverSection);
-        }
-
-        // Initialize carousel position on load
+        // Initialize carousel position and iframe state on load
         window.addEventListener('load', () => {
+            // IMPORTANT: Pre-process iframes to save original src and pause them initially
+            reelContainers.forEach(iframe => {
+                iframe.dataset.originalSrc = iframe.src;
+                setReelState(iframe, 'pause'); // Pause all reels
+            });
+
             updateReelCarousel();
+            // Start main video immediately (it's already set to autoplay via src URL)
             playMainVideo(); 
         });
 
