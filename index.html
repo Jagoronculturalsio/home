@@ -19,13 +19,28 @@
             font-family: 'Inter', sans-serif;
             background-color: #f7f7f7;
         }
+        
         /* Custom CSS for the full-width banner image */
         .banner-image {
-            /* UPDATED: Using the new banner image URL provided by the user. */
-            background-image: url('https://lh3.googleusercontent.com/pw/AP1GczMjl8jXZqHC8oBYxmttpAaMkuSNv4tShvQ1P1gveMAkzaRoB-l8wSp5NT3dWXTTBB0F90KW-5W3d2dRJYdOqjGFJhvy8XtiLd9gnkwQnqH6uj3tpS9w8z8-OiBFEu96DHCA6ucwO4Vf6AvJ7D00R6U=w1920-h378-s-no-gm?authuser=0');
-            background-size: cover;
+            /* DEFAULT: Desktop/Wider Screens (Desktop Banner) */
+            /* UPDATED URL: New desktop image URL provided by Rakibul */
+            background-image: url('https://lh3.googleusercontent.com/pw/AP1GczPNaBQ8UXSCZFVA36cpmyw_Pq11fEl8J2ZbV3HWp_IG1vRPUEj6Ap3qRf0N4ltnJgpevu-w5qwtBUM0Gkd2KH5h6eE7BRZmpHSRKv3SkCpdlvO5MIp7L4UycARGVQW93-6IoOdqHBFWadM3oo8COrY=w1920-h378-s-no-gm?authuser=0');
+            background-size: cover; 
+            background-repeat: no-repeat;
             background-position: center;
             width: 100%;
+        }
+
+        /* MEDIA QUERY: Mobile/Smaller Screens (Up to 767px width) */
+        @media (max-width: 767px) {
+            .banner-image {
+                /* Mobile Banner URL (Kept the previous, correct URL) */
+                background-image: url('https://lh3.googleusercontent.com/pw/AP1GczPX4rIPKf-IEF7typ7EvWufCDcI3X2wchQRWvQq7GUXss6i67xXz-cJ8_cAIUIkhoRZCB1fwrf2g6F6bFkJstoVyaEyAFqcuAi-Y3Dplr87KSxscWj78K3vF64ef6zwSkrgxyW-R19n7cveUkb8MDQ=w1906-h953-s-no-gm?authuser=0');
+                
+                /* Keep 'cover' to ensure no blank space is left and the image fills the container */
+                background-size: cover;
+                background-position: center;
+            }
         }
         
         /* Standard 16:9 Aspect Ratio Container for Video */
